@@ -24,8 +24,8 @@ for num in data[0].split():
     subject = str(message_subject.decode(message_encoding))
     print(subject)
 
-    # body = message.get_playload(decode=None)
-    # print(body)
+    body = message.get_payload(encode=True)
+    print(body)
 
 gmail.close()
 gmail.logout()
