@@ -23,19 +23,20 @@ def getEmailBody(gmail):
         subject = str(message_subject.decode(message_encoding))
         print(subject)
         
-        # body = message.get_payload(encode=True)
-        # print(body)
-    return 
+        body = message.get_payload()
+        print(body)
 
-def main():
-    gmail = imaplib.IMAP4_SSL("imap.gmail.com", "993")
+def getPromptForEmail(gmail):
     try: 
         EMAIL_ADDRESS = input("Enter your email address: ")
         gmail.login(EMAIL_ADDRESS, getpass.getpass())
     except imaplib.IMAP4.error:
         print("login error, re-run the program")
         sys.exit(1)
-    
+
+def main():
+    gmail = imaplib.IMAP4_SSL("imap.gmail.com", "993")
+    getPromptForEmail(gmail) 
     getEmailBody(gmail)
     gmail.close()
     gmail.logout()
