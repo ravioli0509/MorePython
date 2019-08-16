@@ -33,8 +33,6 @@ header_for_test = [
     '特徴コードミス数',
     ''
     ]
-# def decodeList(header_for_test)
-#     for i in header_for_test:
 
 email_array = []
 
