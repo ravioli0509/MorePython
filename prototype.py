@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 import imaplib 
 import email
 import getpass
@@ -32,10 +33,12 @@ header_for_test = [
     '特徴コードミス数',
     ''
     ]
-    
+# def decodeList(header_for_test)
+#     for i in header_for_test:
+
 email_array = []
 
-def getPromptForEmail(gmail):
+def getPromptForAccessingEmail(gmail):
     try: 
         EMAIL_ADDRESS = input("Enter your email address: ")
         gmail.login(EMAIL_ADDRESS, getpass.getpass())
@@ -45,9 +48,9 @@ def getPromptForEmail(gmail):
 
 # "[Gmail]/Sent Mail"
 def getEmailBody(gmail):
-    gmail.select(mailbox='inbox')
+    gmail.select(mailbox='"[Gmail]/Important"')
     gmail.list()
-    result, data = gmail.uid('search', None, "ALL")
+    result, data = gmail.uid('search', None, 'all')
     result, data = gmail.search(None, 'all')
     num_emails = len(data[0].split())
     for message in range(num_emails):
@@ -63,23 +66,23 @@ def getEmailBody(gmail):
         date = email.utils.parsedate_tz(email_message['Date'])
         if date:
             local_date = datetime.datetime.fromtimestamp(email.utils.mktime_tz(date))
-            local_message_date = "%s" %(str(local_date.strftime("%a, %d %b %Y %H:%M:%S")))
+            string_date = str(local_date.strftime("%a, %d %b %Y %H: %M: %S"))
 
         '''
-        email_from, email_to, subject =  -- からのメール, 宛先, 件名
+        email_from, email_to, email_subject, email_date, email_body =  -- からのメール, 宛先, 件名, 日時, 本文 
         '''
         email_from = str(email.header.make_header(email.header.decode_header(email_message['From'])))
         email_to = str(email.header.make_header(email.header.decode_header(email_message['To'])))
-        subject = str(email.header.make_header(email.header.decode_header(email_message['Subject'])))
+        email_subject = str(email.header.make_header(email.header.decode_header(email_message['Subject'])))
+        email_date = "%s" %(string_date)
     
         # Body details
         for part in email_message.walk():
             if part.get_content_type() == "text/plain":
-                body_before_decode = part.get_payload(decode=True)
-                body_decoded = body_before_decode.decode('utf-8')
-                # output_file.write("From: %s\nTo: %s\nDate: %s\nSubject: %s\n\nBody: \n\n%s" %(email_from, email_to,local_message_date, subject, body.decode('utf-8')))
-                # output_file.close()
-                email_array.append([email_from, email_to, local_message_date, subject, body_decoded])
+                body_decode = part.get_payload(decode=True)
+                email_body = body_decode.decode('utf-8')
+                print("From: %s\nTo: %s\nDate: %s\nSubject: %s\n\nBody: \n\n%s" %(email_from, email_to, email_date, email_subject, email_body))
+                email_array.append([email_body])
             else:
                 continue
 
@@ -101,7 +104,7 @@ def count_for_keyword():
 
 def main():
     gmail = imaplib.IMAP4_SSL("imap.gmail.com")
-    getPromptForEmail(gmail) 
+    getPromptForAccessingEmail(gmail) 
     sys.stderr.write("----------------開始----------------\n")
     try:
         getEmailBody(gmail)
