@@ -46,7 +46,7 @@ def getPromptForAccessingEmail(gmail):
 
 # "[Gmail]/Sent Mail"
 def getEmailBody(gmail):
-    gmail.select(mailbox='"[Gmail]/Important"')
+    gmail.select(mailbox='"[Gmail]/Sent Mail"')
     gmail.list()
     result, data = gmail.uid('search', None, 'all')
     result, data = gmail.search(None, 'all')
