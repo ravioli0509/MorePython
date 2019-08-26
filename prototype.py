@@ -36,13 +36,21 @@ header_for_test = [
 
 email_array = []
 
-def getPromptForAccessingEmail(gmail):
-    try: 
-        EMAIL_ADDRESS = input("Enter your email address: ")
-        gmail.login(EMAIL_ADDRESS, getpass.getpass())
-    except imaplib.IMAP4.error:
-        print("login error, re-run the program")
-        sys.exit(1)
+def getPromptForAccessingEmail(gmail, prompt):
+    while prompt == True:     
+        try: 
+            EMAIL_ADDRESS = input("Enter your email address: ")
+            gmail.login(EMAIL_ADDRESS, getpass.getpass())
+            prompt = False
+        except imaplib.IMAP4.error:
+            error_prompt=input("login error, do you want to try again? (Y/N)")
+            if error_prompt.lower() == "y":
+                print("Okay, try again.")
+                continue
+            if error_prompt.lower() == "n":
+                print("Okay, good bye")
+                sys.exit(1)
+        
 
 # "[Gmail]/Sent Mail"
 def getEmailBody(gmail):
@@ -99,8 +107,9 @@ def count_for_keyword():
     pass
 
 def main():
+    prompt = True
     gmail = imaplib.IMAP4_SSL("imap.gmail.com")
-    getPromptForAccessingEmail(gmail) 
+    getPromptForAccessingEmail(gmail, prompt) 
     sys.stderr.write("----------------開始----------------\n")
     try:
         getEmailBody(gmail)
