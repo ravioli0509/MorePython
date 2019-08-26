@@ -54,8 +54,6 @@ def getEmailBody(gmail):
     for message in range(num_emails):
         latest = data[0].split()[message]
         result, email_data = gmail.uid('fetch', latest, '(RFC822)')
-        # result, email_data = conn.store(num,'-FLAGS','\\Seen') 
-        # this might work to set flag to seen, if it doesn't already
         raw_email = email_data[0][1]
         raw_email_string = raw_email.decode('utf-8')
         email_message = email.message_from_string(raw_email_string)
@@ -74,7 +72,7 @@ def getEmailBody(gmail):
         email_subject = str(email.header.make_header(email.header.decode_header(email_message['Subject'])))
         email_date = "%s" %(string_date)
     
-        # Body details
+        # Body details 本文を出力
         for part in email_message.walk():
             if part.get_content_type() == "text/plain":
                 body_decode = part.get_payload(decode=True)
