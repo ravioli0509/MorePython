@@ -47,7 +47,7 @@ def getPromptForAccessingEmail(gmail, prompt):
             if error_prompt.lower() == "y":
                 print("Okay, try again.")
                 continue
-            if error_prompt.lower() == "n":
+            elif error_prompt.lower() == "n":
                 print("Okay, good bye")
                 sys.exit(1)
         
@@ -107,6 +107,7 @@ def count_for_keyword():
     pass
 
 def main():
+    os.system('clear')
     prompt = True
     gmail = imaplib.IMAP4_SSL("imap.gmail.com")
     getPromptForAccessingEmail(gmail, prompt) 
