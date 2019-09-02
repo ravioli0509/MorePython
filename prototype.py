@@ -9,9 +9,6 @@ from email.header import decode_header, make_header
 import mailbox
 import datetime
 
-# ログイン情報
-EMAIL_ADDRESS = "" 
-
 """
 csv の column名
 """
@@ -36,19 +33,23 @@ header_for_test = [
 
 email_array = []
 
+# ログイン情報
+EMAIL_ADDRESS = "" 
+
 def getPromptForAccessingEmail(gmail, prompt):
     while prompt == True:     
         try: 
             EMAIL_ADDRESS = input("Enter your email address: ")
             gmail.login(EMAIL_ADDRESS, getpass.getpass())
             prompt = False
-        except imaplib.IMAP4.error:
-            error_prompt=input("login error, do you want to try again? (Y/N)")
+        except imaplib.IMAP4.error as error:
+            sys.stderr.write("LOGIN ERROR, "+ str(error) + '\n')
+            error_prompt=input("Do you want to try again? (Y/N): ")
             if error_prompt.lower() == "y":
-                print("Okay, try again.")
+                sys.stderr.write("Okay, try again." + '\n')
                 continue
             elif error_prompt.lower() == "n":
-                print("Okay, good bye")
+                sys.stderr.write("Okay, good bye." + '\n')
                 sys.exit(1)
         
 
@@ -101,7 +102,11 @@ def write_output_csv(email_array, output_file, header_for_test):
         csv_writer.writerows(email_array)
 
 def clean_array():
-    pass
+    """
+    we clean up the array given from the email output. Therefore we only take the body of the email. 
+
+    """
+    pass 
 
 def count_for_keyword():
     pass
